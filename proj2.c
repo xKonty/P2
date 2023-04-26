@@ -22,6 +22,7 @@
 FILE *file;
 
 sem_t *out_mutex;
+sem_t *queue0;
 
 int *line_number;
 
