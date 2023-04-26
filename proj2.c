@@ -1,11 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <stdarg.h>
 
+#include <stdarg.h>
+#include <stdbool.h>
 #include <semaphore.h>
+
 #include <unistd.h>
 #include <string.h>
+
+
 
 #include <ctype.h>
 #include <time.h>
@@ -22,9 +26,12 @@
 FILE *file;
 
 sem_t *out_mutex;
-sem_t *queue0;
+sem_t *customer;
+sem_t *postman;
+sem_t *mutex_queue;
 
 int *line_number;
+bool *postoffice_open;
 
 
 int check_input(int argc,char *argv[]){
@@ -80,23 +87,36 @@ int check_input(int argc,char *argv[]){
     return 0;
 }
 
-void semaph_init(){
+void mem_and_semaph_init(){
     line_number = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
     line_number[0] = 1;
-    srand(time(NULL));
-
     out_mutex = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
-    if (out_mutex == MAP_FAILED) {
+
+    postoffice_open = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
+    customer = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
+    postman = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
+    mutex_queue = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
+
+    if (out_mutex == MAP_FAILED) {//TODO:přidat podmínky
         exit(1);
     }
     
     sem_init(out_mutex, 1, 1);
+
+    sem_init(customer, 1, 0);
+    sem_init(postman, 1, 0);
+    sem_init(mutex_queue, 1, 1);
 }
 
-void semaph_destroy(){
+void mem_and_semaph_destroy(){
     sem_destroy(out_mutex);
-    munmap(out_mutex, sizeof(sem_t));
     munmap(line_number, sizeof(int));
+    munmap(out_mutex, sizeof(sem_t));
+
+    munmap(postoffice_open, sizeof(bool));
+    munmap(customer,sizeof(sem_t));
+    munmap(postman,sizeof(sem_t));
+    munmap(mutex_queue,sizeof(sem_t));
 }
 
 void my_print(const char * format, ...){
@@ -111,30 +131,45 @@ void my_print(const char * format, ...){
     sem_post(out_mutex);
 }
 
-
-
-
-
-void postman(int id){ 
-    my_print("U %d: started\n", id);
-    
+int random_number(int num) {
+    srand(time(NULL));
+    return rand() % num;
 }
 
-void customer(int id){
+
+
+void postofficespawn(){
+    my_print("post office open\n");
+}
+
+void postmanspawn(int id){ 
+    my_print("U %d: started\n", id);
+    sem_wait(customer);
+    sem_post(postman);
+}
+
+void customerspawn(int id, int TZ){
     my_print("Z %d: started\n", id);//TODO: po uzavření pošty Z nechodí
-    int service = id%3;//TODO: náhodná čísla
+    usleep(random_number(id)%TZ);
+
+    if()
+    int service = random_number(id);
     my_print("Z %d: entering office for a service %d\n", id, service);
-    
+    sem_wait(mutex_queue);
+    sem_post(customer);
+    sem_wait(postman);
+    my_print("Z %d: called by office worker\n", id);
+    sem_post(mutex_queue);
 }
 
 int main(int argc,char *argv[]){
     check_input(argc, argv);
-    int NZ = atoi(argv[1]); NZ = NZ + 0;
-    int NU = atoi(argv[2]); NU = NU + 0;
-    int TZ = atoi(argv[3]); TZ = TZ + 0;
-    int TU = atoi(argv[4]); TU = TU + 0;    
-    int  F = atoi(argv[5]);  F =  F + 0;
-    semaph_init();
+    int NZ = atoi(argv[1]); NZ = NZ + 0;    // počet zákazníků
+    int NU = atoi(argv[2]); NU = NU + 0;    // počet úředníků
+    int TZ = atoi(argv[3]); TZ = TZ + 0;    // doba kterou vytvořený zákazník čeká
+    int TU = atoi(argv[4]); TU = TU + 0;    // doba přestávky úředníka
+    int  F = atoi(argv[5]);  F =  F + 0;    // doba kterou je otevřena pošta
+    mem_and_semaph_init();
 
     if((file = fopen("proj2.out", "w")) == NULL){
         fprintf(stderr, "File did not open.");
@@ -144,7 +179,7 @@ int main(int argc,char *argv[]){
     for(int i = 1; i <= NU; i++){               // vytváření úředníků
         pid_t id = fork();
         if(id == 0){
-            postman(i);
+            postmanspawn(i);
             exit(0);
         }
     }
@@ -152,13 +187,19 @@ int main(int argc,char *argv[]){
     for(int i = 1; i <= NZ; i++){               // vytváření zákazníků
         pid_t id = fork();
         if(id == 0){
-            customer(i);
+            customerspawn(i, TZ);
             exit(0);
         }
     }
 
+    pid_t id = fork();
+    if(id == 0){
+        postofficespawn();
+        exit(0);
+    }
+
     while(wait(NULL) > 0);
-    semaph_destroy();
+    mem_and_semaph_destroy();
     fclose(file);
     return 0;
 }
