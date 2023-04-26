@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include<stdarg.h>
+#include <stdarg.h>
 
 #include <semaphore.h>
 #include <unistd.h>
 #include <string.h>
 
 #include <ctype.h>
-#include<time.h>
+#include <time.h>
 #include <sys/types.h>
 
 #include <sys/wait.h>
@@ -82,6 +82,7 @@ int check_input(int argc,char *argv[]){
 void semaph_init(){
     line_number = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
     line_number[0] = 1;
+    srand(time(NULL));
 
     out_mutex = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
     if (out_mutex == MAP_FAILED) {
@@ -109,10 +110,9 @@ void my_print(const char * format, ...){
     sem_post(out_mutex);
 }
 
-int random_queue(){
-    srand(time(NULL));
-    return rand()%3;
-}
+
+
+
 
 void postman(int id){ 
     my_print("U %d: started\n", id);
@@ -120,9 +120,10 @@ void postman(int id){
 }
 
 void customer(int id){
-    my_print("Z %d: started\n", id);                                                            // TODO: přidat podmínku, aby po uzavření pošty nechodili zákazníci
-    int service = random_queue();
+    my_print("Z %d: started\n", id);//TODO: po uzavření pošty Z nechodí
+    int service = id%3;//TODO: náhodná čísla
     my_print("Z %d: entering office for a service %d\n", id, service);
+    
 }
 
 int main(int argc,char *argv[]){

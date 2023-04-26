@@ -1,6 +1,9 @@
 1: U 1: started
-2: U 2: started
-3: U 3: started
-4: Z 1: started
-5: Z 3: started
-6: Z 2: started
+2: U 3: started
+3: Z 1: started
+4: Z 1: entering office for a service 1
+5: U 2: started
+6: Z 3: started
+7: Z 3: entering office for a service 0
+8: Z 2: started
+9: Z 2: entering office for a service 2
