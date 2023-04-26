@@ -33,6 +33,7 @@ sem_t *mutex_queue3;
 sem_t *queue1_postman;
 sem_t *queue2_postman;
 sem_t *queue3_postman;
+sem_t *customer_count_mutex;
 
 int *line_number;
 bool *postoffice_open;
@@ -94,19 +95,21 @@ int check_input(int argc,char *argv[]){
 
 void mem_and_semaph_init(){
     line_number = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
-    line_number[0] = 1;
+    *line_number = 1;
     out_mutex = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
 
     postoffice_open = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
-    postoffice_open[0] = true;
+    *postoffice_open = true;
     mutex_queue1 = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
     mutex_queue2 = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
     mutex_queue3 = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
     customer_count = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
-    customer_count[0] = 0;
+    *customer_count = 0;
     queue1_postman = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
     queue2_postman = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
     queue3_postman = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
+    customer_count_mutex = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
+
 
     if (out_mutex == MAP_FAILED) {//TODO:přidat podmínky
         exit(1);
@@ -121,6 +124,7 @@ void mem_and_semaph_init(){
     sem_init(queue1_postman, 1, 0);
     sem_init(queue2_postman, 1, 0);
     sem_init(queue3_postman, 1, 0);
+    sem_init(customer_count_mutex, 1, 1);
 }
 
 void mem_and_semaph_destroy(){
@@ -136,6 +140,7 @@ void mem_and_semaph_destroy(){
     munmap(queue1_postman, sizeof(sem_t));
     munmap(queue2_postman, sizeof(sem_t));
     munmap(queue3_postman, sizeof(sem_t));
+    munmap(customer_count_mutex,sizeof(sem_t));
 }
 
 void my_print(const char * format, ...){
@@ -155,58 +160,106 @@ int random_number(int num) {
     return rand() % num;
 }
 
+void change_customer_count(int num){
+    sem_wait(customer_count_mutex);
+    customer_count[0] = customer_count[0] + num;
+    sem_post(customer_count_mutex);
+}
+
+
+
+
 void postmanspawn(int id, int TU){ 
     my_print("U %d: started\n", id);
-    if(*customer_count == 0){
-        if(*postoffice_open == true){
+    while(*postoffice_open == true){
+        if(customer_count == 0){
             my_print("U %d: taking break\n", id);
             usleep(random_number(id+99)%TU);
             my_print("U %d: break finished\n", id);
         }
         else{
-            my_print("U %d: going home\n", id);
+            int queue1;
+            int queue2;
+            int queue3;
+            sem_getvalue(queue1_postman, &queue1);
+            sem_getvalue(queue2_postman, &queue2);
+            sem_getvalue(queue3_postman, &queue3);
+            int service = random_number(id+2)%3 + 1;
+            switch(service){
+                case 1:
+                    if(queue1 != 0){
+                       signal(queue1_postman);
+                       my_print("U %d: serving a service of type%d\n", service);
+                       usleep(random_number(id+9)%11);
+                       my_print("U %d: service finished", service);
+                       break;
+                    }else
+                case 2:
+                    if(queue2 != 0){
+                        sem_post(queue1_postman);
+                        my_print("U %d: serving a service of type%d\n", service);
+                        usleep(random_number(id+9)%11);
+                        my_print("U %d: service finished", service);
+                        break;
+                    }else
+                case 3:
+                    if(queue3 != 0){
+                            sem_post(queue1_postman);
+                            my_print("U %d: serving a service of type%d\n", service);
+                            usleep(random_number(id+9)%11);
+                            my_print("U %d: service finished", service);
+                            break;
+                    }
+                    else //TODO:prázdné tři řady
+                    break;
+            }
+
+
+
         }
-    }
-    else
-    {
 
     }
+    my_print("U %d: going home\n", id);
 }
 
 void customerspawn(int id, int TZ){
     my_print("Z %d: started\n", id);//TODO: po uzavření pošty Z nechodí
-    *customer_count++;
     usleep(random_number(id+9999)%TZ);
+    change_customer_count(1);
     if(postoffice_open == false){
         my_print("Z %d: going home\n", id);
+        change_customer_count(-1);
     }
     else{
         int service = random_number(id+2)%3 + 1;
         my_print("Z %d: entering office for a service %d\n", id, service);
-        switch(service){
-            case '1': 
+        switch(service){//TODO:  přidat signál pro úředníky
+            case 1: 
                 sem_wait(mutex_queue1);
-                sem_wait(queue1_postman);
+                // sem_wait(queue1_postman);
                 my_print("Z %d: called by office worker\n", id);
                 usleep(random_number(id+9));
                 my_print("Z %d: going home\n", id);
                 sem_post(mutex_queue1);
+                change_customer_count(-1);
                 break;
-            case '2':
+            case 2:
                 sem_wait(mutex_queue2);
-                sem_wait(queue2_postman);
+                // sem_wait(queue2_postman);
                 my_print("Z %d: called by office worker\n", id);
                 usleep(random_number(id+9));
                 my_print("Z %d: going home\n", id);
                 sem_post(mutex_queue2);
+                change_customer_count(-1);
                 break;
-            case '3':
+            case 3:
                 sem_wait(mutex_queue3);
-                sem_wait(queue3_postman);
+                // sem_wait(queue3_postman);
                 my_print("Z %d: called by office worker\n", id);
                 usleep(random_number(id+9));
                 my_print("Z %d: going home\n", id);
                 sem_post(mutex_queue3);
+                change_customer_count(-1);
                 break;
         }
     }   
@@ -242,6 +295,8 @@ int main(int argc,char *argv[]){
         }
     }
 
+    usleep(F);//TODO:F/2 - F fix pls
+    postoffice_open = false;
 
     while(wait(NULL) > 0);
     mem_and_semaph_destroy();
