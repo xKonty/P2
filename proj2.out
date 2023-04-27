@@ -1,194 +1,171 @@
 1: U 1: started
-2: Semaphore 1/2/3:0/0/0
-3: Semaphore 1/2/3:0/0/0
-4: Semaphore 1/2/3:0/0/0
-5: Semaphore 1/2/3:0/0/0
-6: Semaphore 1/2/3:0/0/0
-7: Semaphore 1/2/3:0/0/0
-8: Semaphore 1/2/3:0/0/0
-9: Semaphore 1/2/3:0/0/0
-10: Semaphore 1/2/3:0/0/0
-11: Semaphore 1/2/3:0/0/0
-12: Semaphore 1/2/3:0/0/0
-13: Semaphore 1/2/3:0/0/0
-14: Semaphore 1/2/3:0/0/0
-15: Semaphore 1/2/3:0/0/0
-16: Semaphore 1/2/3:0/0/0
-17: Semaphore 1/2/3:0/0/0
-18: Semaphore 1/2/3:0/0/0
-19: Semaphore 1/2/3:0/0/0
-20: Semaphore 1/2/3:0/0/0
-21: Semaphore 1/2/3:0/0/0
-22: Semaphore 1/2/3:0/0/0
-23: Semaphore 1/2/3:0/0/0
-24: Semaphore 1/2/3:0/0/0
-25: Semaphore 1/2/3:0/0/0
-26: Semaphore 1/2/3:0/0/0
-27: Semaphore 1/2/3:0/0/0
-28: Semaphore 1/2/3:0/0/0
-29: Semaphore 1/2/3:0/0/0
-30: Semaphore 1/2/3:0/0/0
-31: Semaphore 1/2/3:0/0/0
-32: Semaphore 1/2/3:0/0/0
-33: Semaphore 1/2/3:0/0/0
-34: Semaphore 1/2/3:0/0/0
-35: Semaphore 1/2/3:0/0/0
-36: Semaphore 1/2/3:0/0/0
-37: Semaphore 1/2/3:0/0/0
-38: Semaphore 1/2/3:0/0/0
-39: Semaphore 1/2/3:0/0/0
-40: Semaphore 1/2/3:0/0/0
-41: Semaphore 1/2/3:0/0/0
-42: Semaphore 1/2/3:0/0/0
-43: Semaphore 1/2/3:0/0/0
-44: Semaphore 1/2/3:0/0/0
-45: Semaphore 1/2/3:0/0/0
-46: Semaphore 1/2/3:0/0/0
-47: Semaphore 1/2/3:0/0/0
-48: Semaphore 1/2/3:0/0/0
-49: Semaphore 1/2/3:0/0/0
-50: Semaphore 1/2/3:0/0/0
-51: Semaphore 1/2/3:0/0/0
-52: Semaphore 1/2/3:0/0/0
-53: Semaphore 1/2/3:0/0/0
-54: Semaphore 1/2/3:0/0/0
-55: Semaphore 1/2/3:0/0/0
-56: Semaphore 1/2/3:0/0/0
-57: Semaphore 1/2/3:0/0/0
-58: Semaphore 1/2/3:0/0/0
-59: Semaphore 1/2/3:0/0/0
-60: Semaphore 1/2/3:0/0/0
-61: Semaphore 1/2/3:0/0/0
-62: Semaphore 1/2/3:0/0/0
-63: Semaphore 1/2/3:0/0/0
-64: Semaphore 1/2/3:0/0/0
-65: Semaphore 1/2/3:0/0/0
-66: Semaphore 1/2/3:0/0/0
-67: Semaphore 1/2/3:0/0/0
-68: Semaphore 1/2/3:0/0/0
-69: Semaphore 1/2/3:0/0/0
-70: Semaphore 1/2/3:0/0/0
-71: Semaphore 1/2/3:0/0/0
-72: Semaphore 1/2/3:0/0/0
-73: Semaphore 1/2/3:0/0/0
-74: Semaphore 1/2/3:0/0/0
-75: Semaphore 1/2/3:0/0/0
-76: Semaphore 1/2/3:0/0/0
-77: Semaphore 1/2/3:0/0/0
-78: Semaphore 1/2/3:0/0/0
-79: Semaphore 1/2/3:0/0/0
-80: Semaphore 1/2/3:0/0/0
-81: Semaphore 1/2/3:0/0/0
-82: Semaphore 1/2/3:0/0/0
-83: U 3: started
-84: Z 4: started
-85: U 2: started
-86: Semaphore 1/2/3:0/0/0
-87: Z 3: started
-88: Z 2: started
-89: U 4: started
-90: Semaphore 1/2/3:0/0/0
-91: Semaphore 1/2/3:0/0/0
-92: Semaphore 1/2/3:0/0/0
-93: Semaphore 1/2/3:0/0/0
-94: Semaphore 1/2/3:0/0/0
-95: Z 1: started
-96: Semaphore 1/2/3:0/0/0
-97: Semaphore 1/2/3:0/0/0
-98: Semaphore 1/2/3:0/0/0
-99: Semaphore 1/2/3:0/0/0
-100: Semaphore 1/2/3:0/0/0
-101: Semaphore 1/2/3:0/0/0
-102: Semaphore 1/2/3:0/0/0
-103: Semaphore 1/2/3:0/0/0
-104: Semaphore 1/2/3:0/0/0
-105: Semaphore 1/2/3:0/0/0
-106: Semaphore 1/2/3:0/0/0
-107: Semaphore 1/2/3:0/0/0
-108: Semaphore 1/2/3:0/0/0
-109: Semaphore 1/2/3:0/0/0
-110: Semaphore 1/2/3:0/0/0
-111: Semaphore 1/2/3:0/0/0
-112: Semaphore 1/2/3:0/0/0
-113: Semaphore 1/2/3:0/0/0
-114: Semaphore 1/2/3:0/0/0
-115: Semaphore 1/2/3:0/0/0
-116: Semaphore 1/2/3:0/0/0
-117: Semaphore 1/2/3:0/0/0
-118: Semaphore 1/2/3:0/0/0
-119: Semaphore 1/2/3:0/0/0
-120: Semaphore 1/2/3:0/0/0
-121: Semaphore 1/2/3:0/0/0
-122: Semaphore 1/2/3:0/0/0
-123: Semaphore 1/2/3:0/0/0
-124: Semaphore 1/2/3:0/0/0
-125: Semaphore 1/2/3:0/0/0
-126: Semaphore 1/2/3:0/0/0
-127: Semaphore 1/2/3:0/0/0
-128: Semaphore 1/2/3:0/0/0
-129: Semaphore 1/2/3:0/0/0
-130: Semaphore 1/2/3:0/0/0
-131: Semaphore 1/2/3:0/0/0
-132: Semaphore 1/2/3:0/0/0
-133: Semaphore 1/2/3:0/0/0
-134: Semaphore 1/2/3:0/0/0
-135: Semaphore 1/2/3:0/0/0
-136: Semaphore 1/2/3:0/0/0
-137: Semaphore 1/2/3:0/0/0
-138: Semaphore 1/2/3:0/0/0
-139: Semaphore 1/2/3:0/0/0
-140: Semaphore 1/2/3:0/0/0
-141: Semaphore 1/2/3:0/0/0
-142: Semaphore 1/2/3:0/0/0
-143: Semaphore 1/2/3:0/0/0
-144: Semaphore 1/2/3:0/0/0
-145: Semaphore 1/2/3:0/0/0
-146: Semaphore 1/2/3:0/0/0
-147: Semaphore 1/2/3:0/0/0
-148: Semaphore 1/2/3:0/0/0
-149: Semaphore 1/2/3:0/0/0
-150: Semaphore 1/2/3:0/0/0
-151: Semaphore 1/2/3:0/0/0
-152: Semaphore 1/2/3:0/0/0
-153: Semaphore 1/2/3:0/0/0
-154: Semaphore 1/2/3:0/0/0
-155: Semaphore 1/2/3:0/0/0
-156: Semaphore 1/2/3:0/0/0
-157: Semaphore 1/2/3:0/0/0
-158: Semaphore 1/2/3:0/0/0
-159: Semaphore 1/2/3:0/0/0
-160: Semaphore 1/2/3:0/0/0
-161: Semaphore 1/2/3:0/0/0
-162: Semaphore 1/2/3:0/0/0
-163: Semaphore 1/2/3:0/0/0
-164: Semaphore 1/2/3:0/0/0
-165: Semaphore 1/2/3:0/0/0
-166: Semaphore 1/2/3:0/0/0
-167: Semaphore 1/2/3:0/0/0
-168: Semaphore 1/2/3:0/0/0
-169: Semaphore 1/2/3:0/0/0
-170: Semaphore 1/2/3:0/0/0
-171: Semaphore 1/2/3:0/0/0
-172: Semaphore 1/2/3:0/0/0
-173: Semaphore 1/2/3:0/0/0
-174: Semaphore 1/2/3:0/0/0
-175: Semaphore 1/2/3:0/0/0
-176: Semaphore 1/2/3:0/0/0
-177: Semaphore 1/2/3:0/0/0
-178: Semaphore 1/2/3:0/0/0
-179: Semaphore 1/2/3:0/0/0
-180: Semaphore 1/2/3:0/0/0
-181: Semaphore 1/2/3:0/0/0
-182: Semaphore 1/2/3:0/0/0
-183: Semaphore 1/2/3:0/0/0
-184: Z 1: entering office for a service 1
-185: U 4: going home
-186: Semaphore 1/2/3:0/0/0
-187: U 2: going home
-188: Semaphore 1/2/3:0/0/0
-189: U 3: going home
-190: Semaphore 1/2/3:0/0/0
-191: U 1: going home
-192: Z 2: entering office for a service 2
-193: Z 3: entering office for a service 3
-194: Z 4: entering office for a service 1
+2: Z 2: started
+3: Z 1: started
+4: Z 4: started
+5: Z 3: started
+6: Z 3: entering office for a service 3
+7: Z 3: called by office worker
+8: U 1: serving a service of type 3
+9: U 1: serving a service of type 3
+10: U 1: serving a service of type 3
+11: U 1: serving a service of type 3
+12: U 1: serving a service of type 3
+13: U 1: serving a service of type 3
+14: U 1: serving a service of type 3
+15: U 1: serving a service of type 3
+16: U 1: serving a service of type 3
+17: U 1: serving a service of type 3
+18: U 1: serving a service of type 3
+19: U 1: serving a service of type 3
+20: U 1: serving a service of type 3
+21: U 1: serving a service of type 3
+22: U 1: serving a service of type 3
+23: U 1: serving a service of type 3
+24: U 1: serving a service of type 3
+25: U 1: serving a service of type 3
+26: U 1: serving a service of type 3
+27: U 1: serving a service of type 3
+28: U 1: serving a service of type 3
+29: U 1: serving a service of type 3
+30: U 1: serving a service of type 3
+31: U 1: serving a service of type 3
+32: U 1: serving a service of type 3
+33: U 1: serving a service of type 3
+34: U 1: serving a service of type 3
+35: U 1: serving a service of type 3
+36: U 1: serving a service of type 3
+37: U 1: serving a service of type 3
+38: U 1: serving a service of type 3
+39: U 1: serving a service of type 3
+40: U 1: serving a service of type 3
+41: U 1: serving a service of type 3
+42: U 1: serving a service of type 3
+43: U 1: serving a service of type 3
+44: U 1: serving a service of type 3
+45: Z 3: going home
+46: U 1: serving a service of type 3
+47: Z 4: entering office for a service 2
+48: U 1: serving a service of type 2
+49: U 1: serving a service of type 2
+50: Z 4: called by office worker
+51: U 1: serving a service of type 2
+52: U 1: serving a service of type 2
+53: U 1: serving a service of type 2
+54: U 1: serving a service of type 2
+55: U 1: serving a service of type 2
+56: U 1: serving a service of type 2
+57: U 1: serving a service of type 2
+58: U 1: serving a service of type 2
+59: U 1: serving a service of type 2
+60: U 1: serving a service of type 2
+61: U 1: serving a service of type 2
+62: U 1: serving a service of type 2
+63: U 1: serving a service of type 2
+64: U 1: serving a service of type 2
+65: U 1: serving a service of type 2
+66: U 1: serving a service of type 2
+67: U 1: serving a service of type 2
+68: U 1: serving a service of type 2
+69: U 1: serving a service of type 2
+70: U 1: serving a service of type 2
+71: U 1: serving a service of type 2
+72: U 1: serving a service of type 2
+73: U 1: serving a service of type 2
+74: U 1: serving a service of type 2
+75: U 1: serving a service of type 2
+76: U 1: serving a service of type 2
+77: U 1: serving a service of type 2
+78: U 1: serving a service of type 2
+79: U 1: serving a service of type 2
+80: U 1: serving a service of type 2
+81: U 1: serving a service of type 2
+82: U 1: serving a service of type 2
+83: U 1: serving a service of type 2
+84: U 1: serving a service of type 2
+85: U 1: serving a service of type 2
+86: U 1: serving a service of type 2
+87: U 1: serving a service of type 2
+88: U 1: serving a service of type 2
+89: U 1: serving a service of type 2
+90: U 1: serving a service of type 2
+91: Z 4: going home
+92: U 1: serving a service of type 2
+93: Z 1: entering office for a service 2
+94: U 1: serving a service of type 2
+95: U 1: serving a service of type 2
+96: U 1: serving a service of type 2
+97: U 1: serving a service of type 2
+98: U 1: serving a service of type 2
+99: U 1: serving a service of type 2
+100: U 1: serving a service of type 2
+101: U 1: serving a service of type 2
+102: Z 1: called by office worker
+103: U 1: serving a service of type 2
+104: U 1: serving a service of type 2
+105: U 1: serving a service of type 2
+106: U 1: serving a service of type 2
+107: U 1: serving a service of type 2
+108: U 1: serving a service of type 2
+109: U 1: serving a service of type 2
+110: U 1: serving a service of type 2
+111: U 1: serving a service of type 2
+112: U 1: serving a service of type 2
+113: U 1: serving a service of type 2
+114: U 1: serving a service of type 2
+115: U 1: serving a service of type 2
+116: U 1: serving a service of type 2
+117: U 1: serving a service of type 2
+118: U 1: serving a service of type 2
+119: U 1: serving a service of type 2
+120: U 1: serving a service of type 2
+121: U 1: serving a service of type 2
+122: U 1: serving a service of type 2
+123: U 1: serving a service of type 2
+124: U 1: serving a service of type 2
+125: U 1: serving a service of type 2
+126: U 1: serving a service of type 2
+127: U 1: serving a service of type 2
+128: U 1: serving a service of type 2
+129: U 1: serving a service of type 2
+130: Z 1: going home
+131: U 1: serving a service of type 2
+132: Z 2: entering office for a service 2
+133: U 1: serving a service of type 2
+134: U 1: serving a service of type 2
+135: U 1: serving a service of type 2
+136: U 1: serving a service of type 2
+137: U 1: serving a service of type 2
+138: U 1: serving a service of type 2
+139: U 1: serving a service of type 2
+140: U 1: serving a service of type 2
+141: U 1: serving a service of type 2
+142: U 1: serving a service of type 2
+143: Z 2: called by office worker
+144: U 1: serving a service of type 2
+145: U 1: serving a service of type 2
+146: U 1: serving a service of type 2
+147: U 1: serving a service of type 2
+148: U 1: serving a service of type 2
+149: U 1: serving a service of type 2
+150: U 1: serving a service of type 2
+151: U 1: serving a service of type 2
+152: U 1: serving a service of type 2
+153: U 1: serving a service of type 2
+154: U 1: serving a service of type 2
+155: U 1: serving a service of type 2
+156: U 1: serving a service of type 2
+157: U 1: serving a service of type 2
+158: U 1: serving a service of type 2
+159: U 1: serving a service of type 2
+160: U 1: serving a service of type 2
+161: U 1: serving a service of type 2
+162: U 1: serving a service of type 2
+163: U 1: serving a service of type 2
+164: U 1: serving a service of type 2
+165: U 1: serving a service of type 2
+166: U 1: serving a service of type 2
+167: U 1: serving a service of type 2
+168: U 1: serving a service of type 2
+169: U 1: serving a service of type 2
+170: Z 2: going home
+171: U 1: serving a service of type 2
