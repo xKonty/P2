@@ -25,6 +25,7 @@
 FILE *file;
 
 sem_t *out_mutex;
+sem_t *customer_count_mutex;
 
 sem_t *mutex_queue;
 sem_t *queue1_postman;
@@ -33,7 +34,6 @@ sem_t *queue3_postman;
 sem_t *queue1_customer;
 sem_t *queue2_customer;
 sem_t *queue3_customer;
-sem_t *customer_count_mutex;
 
 int *line_number;
 bool *postoffice_open;
