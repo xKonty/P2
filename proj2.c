@@ -45,7 +45,8 @@ int *queue3;
 
 
 int check_input(int argc,char *argv[]){
-    //#remove
+
+    // TODO:segfault fix, check arguments
     return 0;
 
     // INCORRECT ARG COUNT
@@ -75,21 +76,22 @@ int check_input(int argc,char *argv[]){
 
     // 0 < TZ <= 10 000
     int TZ = atoi(argv[4]);
-    if(!(TZ <= 10000 && 0 < TZ)){
+    printf("%d", TZ);
+    if((TZ > 10000) || (0 > TZ)){
         fprintf(stderr,"Incorrect arg:TZ\n");
         return 1;
     }
 
     //  0 <= TU <= 100
     int TU = atoi(argv[5]);
-    if(!(0 <= TU && TU <= 100)){
+    if(((0 > TU) || (TU > 100))){
         fprintf(stderr,"Incorrect arg:TU\n");
         return 1;
     }
 
     //  0 <= F <= 10000
     int F = atoi(argv[6]);
-    if(!(0 <= F && F <= 10000)){
+    if(!((0 <= F) || (F <= 10000))){
         fprintf(stderr,"Incorrect arg:F\n");
         return 1;
     }
@@ -190,22 +192,23 @@ void postmanspawn(int id, int TU){
                     if((*queue1 > 0) || (*queue2 > 0) || (*queue3 > 0)){
                         switch(1){
                             case 1:
+                                sem_wait(mutex_queue);//TODO:REMOVE
                                 if((*queue1 > 0)){
                                     change_customer_count(queue1, -1);
+                                    sem_post(mutex_queue);//TODO:REMOVE
                                     sem_post(queue1_postman);
-                                    my_print("U %d: stuck at queue1 semaph\n", id);//TODO:Remove
                                     sem_wait(queue1_customer);
                                     my_print("U %d: serving a service of type 1\n", id);
                                     usleep((random_number(id+9)%11)*1000);
                                     my_print("U %d: service finished\n", id);
                                     break;
                                 }
-                                // fallthrough
+                                // fallthrough  
                             case 2:
                                 if((*queue2 > 0)){
                                     change_customer_count(queue2, -1);
+                                    sem_post(mutex_queue);//TODO:REMOVE
                                     sem_post(queue2_postman);
-                                    my_print("U %d: stuck at queue2 semaph\n", id);//TODO:Remove
                                     sem_wait(queue2_customer);
                                     my_print("U %d: serving a service of type 2\n", id);
                                     usleep((random_number(id+9)%11)*1000);
@@ -216,8 +219,8 @@ void postmanspawn(int id, int TU){
                             case 3:
                                 if((*queue3 > 0)){
                                     change_customer_count(queue3, -1);
+                                    sem_post(mutex_queue);//TODO:REMOVE
                                     sem_post(queue3_postman);
-                                    my_print("U %d: stuck at queue3 semaph\n", id);
                                     sem_wait(queue3_customer);
                                     my_print("U %d: serving a service of type 3\n", id);
                                     usleep((random_number(id+9)%11)*1000);
@@ -225,65 +228,65 @@ void postmanspawn(int id, int TU){
                                     break;
                                 }
                                 else{
+                                    sem_post(mutex_queue);//TODO:REMOVE
                                     break;
                                 }
                         }
-                    } else {
-                        my_print("U %d: taking a break\n", id);
+                    } else{
+                        my_print("U %d: taking break\n", id);
                         usleep((random_number(id+TU-1)%TU)*1000);
                         my_print("U %d: break finished\n", id);
                     }
                 } else{
-                    switch(1){
-                            case 1:
-                                if((*queue1 > 0)){
-                                    change_customer_count(queue1, -1);
-                                    sem_post(queue1_postman);
-                                    my_print("U %d: stuck at queue1_1 semaph\n", id);//TODO:Remove
-                                    sem_wait(queue1_customer);
-                                    my_print("U %d: serving a service of type 1\n", id);
-                                    usleep((random_number(id+9)%11)*1000);
-                                    my_print("U %d: service finished\n", id);
-                                }
-                                else{
-                                    sem_post(queue1_postman);
-                                }
-                                // fallthrough
-                            case 2:
-                                if((*queue2 > 0)){
-                                    change_customer_count(queue2, -1);
-                                    sem_post(queue2_postman);
-                                    my_print("U %d: stuck at queue2_1 semaph\n", id);//TODO:Remove
-                                    sem_wait(queue2_customer);
-                                    my_print("U %d: serving a service of type 2\n", id);
-                                    usleep((random_number(id+9)%11)*1000);
-                                    my_print("U %d: service finished\n", id);
-                                }
-                                else{
-                                    sem_post(queue2_postman);
-                                }
-                                // fallthrough
-                            case 3:
-                                if((*queue3 > 0)){
-                                    change_customer_count(queue3, -1);
-                                    sem_post(queue3_postman);
-                                    my_print("U %d: stuck at queue3_1 semaph\n", id);//TODO:Remove
-                                    sem_wait(queue3_customer);
-                                    my_print("U %d: serving a service of type 3\n", id);
-                                    usleep((random_number(id+9)%11)*1000);
-                                    my_print("U %d: service finished\n", id);
-                                }
-                                else{
-                                    sem_post(queue3_postman);
-                                }
-                                break;
+                    while((*queue1 != 0) || (*queue2 != 0) || (*queue3 != 0)){
+                        switch(1){
+                                    case 1:
+                                    sem_wait(mutex_queue);//TODO:REMOVE
+                                        if((*queue1 > 0)){
+                                            change_customer_count(queue1, -1);
+                                            sem_post(mutex_queue);//TODO:REMOVE
+                                            sem_post(queue1_postman);
+                                            sem_wait(queue1_customer);
+                                            my_print("U %d: serving a service of type 1\n", id);
+                                            usleep((random_number(id+9)%11)*1000);
+                                            my_print("U %d: service finished\n", id);
+                                            break;
+                                        }
+                                        // fallthrough
+                                    case 2:
+                                        if((*queue2 > 0)){
+                                            change_customer_count(queue2, -1);
+                                            sem_post(mutex_queue);//TODO:REMOVE
+                                            sem_post(queue2_postman);
+                                            sem_wait(queue2_customer);
+                                            my_print("U %d: serving a service of type 2\n", id);
+                                            usleep((random_number(id+9)%11)*1000);
+                                            my_print("U %d: service finished\n", id);
+                                            break;
+                                        }
+                                        // fallthrough
+                                    case 3:
+                                        if((*queue3 > 0)){
+                                            change_customer_count(queue3, -1);
+                                            sem_post(mutex_queue);//TODO:REMOVE
+                                            sem_post(queue3_postman);
+                                            sem_wait(queue3_customer);
+                                            my_print("U %d: serving a service of type 3\n", id);
+                                            usleep((random_number(id+9)%11)*1000);
+                                            my_print("U %d: service finished\n", id);
+                                            break;
+                                        }
+                                        if((*queue1 == 0) || (*queue2 == 0) || (*queue3 == 0)){
+                                            break;
+                                        }
                         }
+                    }
                     my_print("U %d: going home\n", id);
                     break;
                 }
             }
     } else
-        my_print("U %d: going home", id);
+    my_print("U %d: going home", id);
 }
 
 void customerspawn(int id, int TZ){
@@ -327,19 +330,29 @@ void customerspawn(int id, int TZ){
 
 
 int main(int argc,char *argv[]){
-    if(check_input(argc, argv) == 1)
+    if(check_input(argc, argv) == 1){
         return 1;
+    }
     int NZ = atoi(argv[1]); NZ = NZ + 0;    // počet zákazníků
     int NU = atoi(argv[2]); NU = NU + 0;    // počet úředníků
     int TZ = atoi(argv[3]); TZ = TZ + 0;    // doba kterou vytvořený zákazník čeká
     int TU = atoi(argv[4]); TU = TU + 0;    // doba přestávky úředníka
     int  F = atoi(argv[5]);  F =  F + 0;    // doba kterou je otevřena pošta
-    mem_and_semaph_init();
+
 
     if((file = fopen("proj2.out", "w")) == NULL){
         fprintf(stderr, "File did not open.");
         return 1;
     }
+
+    if(F == 0){//TODO: is this okay ?
+        fprintf(file, "1: closing\n");
+        fclose(file);
+        return 0;
+    }
+    
+
+    mem_and_semaph_init();
 
     for(int i = 1; i <= NU; i++){               // vytváření úředníků
         pid_t id = fork();
@@ -357,10 +370,16 @@ int main(int argc,char *argv[]){
         }
     }
 
-    int open_time = (F/2) + (random_number(F)%(F/2));
+    int open_time;
+    if(F ==1){
+        open_time = 1;
+    } else{
+        open_time = (F/2) + (random_number(F)%(F/2));
+    }
     usleep((open_time)*1000);
-    my_print("Post office is closed now.\n");
+    my_print("closing\n");//TODO: korektně upravit na správný výstup
     *postoffice_open = false;
+
     while(wait(NULL) > 0);
     mem_and_semaph_destroy();
     fclose(file);

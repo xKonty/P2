@@ -5,4 +5,4 @@ main:
 	$(CC) $(CFLAGS) -o proj2 proj2.c -lrt
 
 test:
-	./proj2 10 1 20 5 100
+	./proj2 10 2 20 10 500
