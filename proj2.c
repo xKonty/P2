@@ -45,14 +45,14 @@ int *queue3;
 
 
 int check_input(int argc,char *argv[]){
-    // INCORRECT ARG COUNT
+    // Nesprávný počet argumentů
 
     if(argc != 6){
         fprintf(stderr, "Error : Incorrect arg count(5 arguments are required)\n");
         return 1;
     }
 
-    // INCORRECT ARG
+    // Nesprávný argument
 
     for(int arg_num = 1; arg_num < 6; arg_num++)
     {
@@ -95,6 +95,7 @@ int check_input(int argc,char *argv[]){
 }
 
 void mem_and_semaph_init(){
+    // alokování sdílené paměti pro procesy
     line_number = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
         *line_number = 1;
     out_mutex = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
@@ -116,14 +117,30 @@ void mem_and_semaph_init(){
     queue3 = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
         *queue3 = 0;
 
-
-    if (out_mutex == MAP_FAILED) {//TODO:přidat podmínky
-        exit(1);
+    // kontrola alokace
+    if (    (line_number == MAP_FAILED)             ||
+            (out_mutex == MAP_FAILED)               || 
+            (postoffice_open == MAP_FAILED)         ||
+            (mutex_queue == MAP_FAILED)             ||
+            (queue1_postman == MAP_FAILED)          ||
+            (queue2_postman == MAP_FAILED)          ||
+            (queue3_postman == MAP_FAILED)          ||
+            (queue1_customer == MAP_FAILED)         ||
+            (queue1_customer == MAP_FAILED)         ||
+            (queue2_customer == MAP_FAILED)         ||
+            (queue3_customer == MAP_FAILED)         ||
+            (customer_count_mutex == MAP_FAILED)    ||
+            (queue1 == MAP_FAILED)                  ||
+            (queue2 == MAP_FAILED)                  ||
+            (queue3 == MAP_FAILED)                  ){
+            exit(1);
     }
     
+    // inicializace semaforů pro vlastní funkce
     sem_init(out_mutex, 1, 1);
+    sem_init(customer_count_mutex, 1, 1);
 
-
+    // inicializace semaforů řídících procesy
     sem_init(mutex_queue, 1, 1);
     sem_init(queue1_postman, 1, 0);
     sem_init(queue2_postman, 1, 0);
@@ -131,10 +148,10 @@ void mem_and_semaph_init(){
     sem_init(queue1_customer, 1, 0);
     sem_init(queue2_customer, 1, 0);
     sem_init(queue3_customer, 1, 0);
-    sem_init(customer_count_mutex, 1, 1);
 }
 
 void mem_and_semaph_destroy(){
+    // uvolnění alokované paměti
     sem_destroy(out_mutex);
     munmap(line_number,sizeof(int));
     munmap(out_mutex,sizeof(sem_t));
@@ -154,6 +171,7 @@ void mem_and_semaph_destroy(){
 }
 
 void my_print(const char * format, ...){
+    // vlastní funkce my_print, která obsahuje flush bufferu a mutex
     sem_wait(out_mutex);
     va_list args;
     va_start (args, format);
@@ -179,11 +197,11 @@ void change_customer_count(int *queue, int num){
 
 
 void servelastcustomers(int id){
+    // funkce pro obsloužení posledních zákazníků ve frontě(úředník si nebere pauzy a neobsluhuje pouze jednoho v jednom loopu)
     while((*queue1 != 0) || (*queue2 != 0) || (*queue3 != 0)){
                         switch(1){
                                     case 1:
-                                    my_print("U %d: stuck at mutex\n", id);//TODO:REMOVE
-                                    sem_wait(mutex_queue);//TODO:REMOVE
+                                    sem_wait(mutex_queue);
                                         if((*queue1 > 0)){
                                             change_customer_count(queue1, -1);
                                             sem_post(mutex_queue);
@@ -227,7 +245,8 @@ void servelastcustomers(int id){
 }
 
 
-void postmanspawn(int id, int TU){ 
+void postmanspawn(int id, int TU){
+    // funkce procesu úředník, začíná, pokud je pošta otevřená, tak obsluhuje zákazníky(pokud je 0 zákazníků, tak si bere pauzu), ve chvíli kdy je pošt zavřená, tak doobslouží zbytek a jde domů
     my_print("U %d: started\n", id);
     if(*postoffice_open == true){
             while(1){
@@ -235,7 +254,6 @@ void postmanspawn(int id, int TU){
                     if((*queue1 > 0) || (*queue2 > 0) || (*queue3 > 0)){
                         switch(1){
                             case 1:
-                                my_print("U %d: stuck at mutex", id);//TODO:REMOVE
                                 sem_wait(mutex_queue);
                                 if((*queue1 > 0)){
                                     change_customer_count(queue1, -1);
@@ -243,7 +261,7 @@ void postmanspawn(int id, int TU){
                                     sem_post(queue1_postman);
                                     sem_wait(queue1_customer);
                                     my_print("U %d: serving a service of type 1\n", id);
-                                    usleep((random_number(id+9)%11)*1000);//TODO: přepsat sleep pro TU = 0
+                                    usleep((random_number(id+9)%11)*1000);
                                     my_print("U %d: service finished\n", id);
                                     break;
                                 }
@@ -277,11 +295,13 @@ void postmanspawn(int id, int TU){
                                 }
                         }
                     } else {
-                        my_print("U %d: taking a break\n", id);
-                        if(TU != 0){
-                        usleep((random_number(id+TU-1)%TU)*1000);
+                        if(*postoffice_open == true){
+                            my_print("U %d: taking break\n", id);
+                            if(TU != 0){
+                                usleep((random_number(id+TU-1)%TU)*1000);
+                            }
+                            my_print("U %d: break finished\n", id);
                         }
-                        my_print("U %d: break finished\n", id);
                     }
                 } else{
                     servelastcustomers(id);
@@ -296,6 +316,7 @@ void postmanspawn(int id, int TU){
 }
 
 void customerspawn(int id, int TZ){
+    // funkce procesu zákazník, začíná, je uspána podle TZ, pokud je pošta otevřená, tak si vybere frontu ve které čeká na obsloužení úředníkem, poté odchází domů
     my_print("Z %d: started\n", id);
     if(TZ != 0){
     usleep((random_number(id+9999)%TZ)*1000);
@@ -310,7 +331,6 @@ void customerspawn(int id, int TZ){
             case 1: 
                 change_customer_count(queue1, 1);
                 sem_post(queue1_customer);
-                my_print("Z %d:Stuck at queue1 semaph\n", id);//TODO:REMOVE
                 sem_wait(queue1_postman);
                 my_print("Z %d: called by office worker\n", id);
                 usleep((random_number(id+9))*1000);
@@ -319,7 +339,6 @@ void customerspawn(int id, int TZ){
             case 2:
                 change_customer_count(queue2, 1);
                 sem_post(queue2_customer);
-                my_print("Z %d:Stuck at queue1 semaph\n", id);//TODO:REMOVE
                 sem_wait(queue2_postman);
                 my_print("Z %d: called by office worker\n", id);
                 usleep((random_number(id+9))*1000);
@@ -327,8 +346,7 @@ void customerspawn(int id, int TZ){
                 break;
             case 3:
                 change_customer_count(queue3, 1);
-                sem_post(queue3_customer);
-                my_print("Z %d:Stuck at queue1 semaph\n", id);//TODO:REMOVE
+                sem_post(queue3_customer);;
                 sem_wait(queue3_postman);
                 my_print("Z %d: called by office worker\n", id);
                 usleep((random_number(id+9))*1000);
@@ -355,15 +373,12 @@ int main(int argc,char *argv[]){
         fprintf(stderr, "File did not open.");
         return 1;
     }
-
-    if(F == 0){//TODO: is this okay ?
-        fprintf(file, "1: closing\n");
-        fclose(file);
-        return 0;
-    }
     
 
     mem_and_semaph_init();
+    if(F == 0){
+        *postoffice_open = false;
+    }
 
     for(int i = 1; i <= NU; i++){               // vytváření úředníků
         pid_t id = fork();
@@ -384,11 +399,16 @@ int main(int argc,char *argv[]){
     int open_time;
     if(F ==1){
         open_time = 1;
-    } else{
+    }else if(F==0){
+        open_time = 0;
+    }else{
         open_time = (F/2) + (random_number(F)%(F/2));
     }
-    usleep((open_time)*1000);
-    my_print("Post office is closed now.\n");//TODO: korektně upravit na správný výstup
+
+    if(F != 0){
+        usleep((open_time)*1000);
+    }
+    my_print("closing\n");
     *postoffice_open = false;
 
     while(wait(NULL) > 0);
