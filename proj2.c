@@ -34,6 +34,7 @@ sem_t *queue3_postman;
 sem_t *queue1_customer;
 sem_t *queue2_customer;
 sem_t *queue3_customer;
+sem_t *goinghome_mutex;
 
 int *line_number;
 bool *postoffice_open;
@@ -102,6 +103,7 @@ void mem_and_semaph_init(){
 
     postoffice_open = mmap(NULL, sizeof(bool), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
     *postoffice_open = true;
+    goinghome_mutex = mmap(NULL, sizeof(bool), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
     mutex_queue = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
     queue1_postman = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
     queue2_postman = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
@@ -148,6 +150,7 @@ void mem_and_semaph_init(){
     sem_init(queue1_customer, 1, 0);
     sem_init(queue2_customer, 1, 0);
     sem_init(queue3_customer, 1, 0);
+    sem_init(goinghome_mutex, 1, 1);
 }
 
 void mem_and_semaph_destroy(){
@@ -157,6 +160,7 @@ void mem_and_semaph_destroy(){
     munmap(out_mutex,sizeof(sem_t));
 
     munmap(postoffice_open,sizeof(bool));
+    munmap(goinghome_mutex, sizeof(sem_t));
     munmap(mutex_queue,sizeof(sem_t));
     munmap(queue1_postman, sizeof(sem_t));
     munmap(queue2_postman, sizeof(sem_t));
@@ -245,13 +249,12 @@ void servelastcustomers(int id){
 }
 
 
+
 void postmanspawn(int id, int TU){
     // funkce procesu úředník, začíná, pokud je pošta otevřená, tak obsluhuje zákazníky(pokud je 0 zákazníků, tak si bere pauzu), ve chvíli kdy je pošt zavřená, tak doobslouží zbytek a jde domů
     my_print("U %d: started\n", id);
-    if(*postoffice_open == true){
             while(1){
-                if(*postoffice_open == true){
-                    if((*queue1 > 0) || (*queue2 > 0) || (*queue3 > 0)){
+                if((*postoffice_open == true) && ((*queue1 > 0) || (*queue2 > 0) || (*queue3 >0))){
                         switch(1){
                             case 1:
                                 sem_wait(mutex_queue);
@@ -294,25 +297,18 @@ void postmanspawn(int id, int TU){
                                     break;
                                 }
                         }
-                    } else {
-                        if(*postoffice_open == true){
+                }else if((*postoffice_open == true) && ((*queue1 == 0) && (*queue2 == 0) && (*queue3 == 0))){
                             my_print("U %d: taking break\n", id);
                             if(TU != 0){
                                 usleep((random_number(id+TU-1)%TU)*1000);
                             }
                             my_print("U %d: break finished\n", id);
-                        }
-                    }
-                } else{
+                }else{
                     servelastcustomers(id);
                     my_print("U %d: going home\n", id);
                     break;
                 }
             }
-    } else{
-        servelastcustomers(id);
-        my_print("U %d: going home\n", id);
-    }
 }
 
 void customerspawn(int id, int TZ){
@@ -379,6 +375,7 @@ int main(int argc,char *argv[]){
     if(F == 0){
         *postoffice_open = false;
     }
+
 
     for(int i = 1; i <= NU; i++){               // vytváření úředníků
         pid_t id = fork();
