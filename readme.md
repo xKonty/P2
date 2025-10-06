@@ -1,0 +1,1 @@
+Projekt do operačních systémů, simulace pošty, semafory a komunikace mezi procesy
